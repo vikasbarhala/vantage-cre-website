@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANTAGE CRE — Commercial Real Estate & Investment</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #07080d;
+  --deep: #0c0f1a;
+  --panel: #111520;
+  --panel2: #161b2a;
+  --border: rgba(255,255,255,0.07);
+  --blue: #1e3a8a;
+  --cyan: #00d4ff;
+  --cyan2: #00a8cc;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --green: #10b981;
+  --muted: #6b7a99;
+  --light: #a8b4cc;
+  --white: #e8edf8;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--ink); color: var(--light); font-family: 'Barlow', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+/* CURSOR */
+#cur { position: fixed; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; }
+#cur-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(0,212,255,0.4); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: width .4s, height .4s; }
+
+/* GRID OVERLAY */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2rem 5rem;
+  transition: all .4s;
+}
+nav.scrolled {
+  background: rgba(7,8,13,0.95);
+  backdrop-filter: blur(24px);
+  padding: 1.2rem 5rem;
+  border-bottom: 1px solid var(--border);
+}
+.logo { display: flex; align-items: center; gap: .8rem; text-decoration: none; }
+.logo-mark {
+  width: 34px; height: 34px; background: var(--cyan);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+  position: relative;
+}
+.logo-mark::after {
+  content: 'V'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: .85rem; color: var(--ink);
+}
+.logo-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.2em; color: var(--white); }
+.logo-name span { color: var(--cyan); }
+
+.nav-menu { display: flex; align-items: center; gap: 3rem; list-style: none; }
+.nav-menu a { color: var(--muted); text-decoration: none; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color .3s; }
+.nav-menu a:hover { color: var(--cyan); }
+.nav-post-btn {
+  background: transparent; border: 1px solid var(--cyan);
+  color: var(--cyan); padding: .6rem 1.5rem;
+  font-family: 'Syne', sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: none; transition: all .3s; text-decoration: none;
+}
+.nav-post-btn:hover { background: var(--cyan); color: var(--ink); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; position: relative; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 8rem 5rem 12rem;
+  overflow: hidden;
+}
+.hero-glow1 { position: absolute; top: -10%; left: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 60%); pointer-events: none; animation: breathe 6s ease-in-out infinite alternate; }
+.hero-glow2 { position: absolute; bottom: 0; right: 10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 60%); pointer-events: none; animation: breathe 5s 2s ease-in-out infinite alternate; }
+@keyframes breathe { from { transform: scale(1); } to { transform: scale(1.3); } }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: .8rem;
+  font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--cyan);
+  margin-bottom: 2rem; opacity: 0; animation: up .8s .2s forwards;
+}
+.hero-tag-line { width: 40px; height: 1px; background: var(--cyan); }
+
+.hero-h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(3.5rem, 8vw, 8.5rem); line-height: .95;
+  letter-spacing: -0.02em; color: var(--white);
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: up .9s .35s forwards;
+}
+.hero-h1 .cyan { color: var(--cyan); }
+.hero-h1 .italic { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; color: var(--amber); font-size: .75em; display: block; }
+
+.hero-p {
+  font-size: .9rem; line-height: 1.9; color: var(--muted); max-width: 460px; margin-bottom: 3rem;
+  opacity: 0; animation: up .8s .5s forwards;
+}
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: up .8s .65s forwards; }
+.btn-cyan { background: var(--cyan); color: var(--ink); padding: 1rem 2.5rem; font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; text-decoration: none; transition: background .3s, transform .3s; display: inline-block; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%); }
+.btn-cyan:hover { background: var(--cyan2); transform: translateY(-2px); }
+.btn-border { border: 1px solid var(--border); color: var(--light); padding: 1rem 2.5rem; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; text-decoration: none; transition: all .3s; display: inline-block; }
+.btn-border:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* LIVE METRICS BAR */
+.metrics-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+  background: var(--panel); border-top: 1px solid var(--border);
+  display: flex; opacity: 0; animation: up .8s 1s forwards;
+}
+.metric { flex: 1; padding: 1.6rem 2.5rem; border-right: 1px solid var(--border); transition: background .3s; position: relative; }
+.metric:last-child { border-right: none; }
+.metric:hover { background: var(--panel2); }
+.metric-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 2rem; color: var(--cyan); line-height: 1; }
+.metric-lbl { font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
+.metric-delta { position: absolute; top: 1.6rem; right: 1.5rem; font-size: .65rem; color: var(--green); }
+
+@keyframes up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+/* TICKER */
+.ticker { background: var(--panel); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: .8rem 0; overflow: hidden; position: relative; z-index: 10; }
+.ticker-inner { display: flex; animation: tick 30s linear infinite; white-space: nowrap; }
+.ticker-item { display: flex; align-items: center; gap: 1.5rem; padding: 0 3rem; font-family: 'Syne', sans-serif; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.ticker-item .t-label { color: var(--cyan); }
+.ticker-item .t-up { color: var(--green); }
+.ticker-item .t-down { color: var(--red); }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* SECTION */
+section { padding: 8rem 5rem; position: relative; z-index: 1; }
+.eyebrow { font-size: .62rem; letter-spacing: .4em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; display: flex; align-items: center; gap: .8rem; }
+.eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--cyan); }
+.sec-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4.5vw, 4rem); line-height: 1; color: var(--white); margin-bottom: 1rem; }
+.sec-sub { font-size: .85rem; color: var(--muted); line-height: 1.9; max-width: 500px; }
+
+/* LISTINGS SECTION */
+.listings-sec { background: var(--deep); }
+.listings-controls { display: flex; justify-content: space-between; align-items: center; margin: 3rem 0 2rem; flex-wrap: gap; gap: 1.5rem; }
+.cat-filters { display: flex; gap: .5rem; flex-wrap: wrap; }
+.cat-btn {
+  padding: .5rem 1.2rem; border: 1px solid var(--border);
+  background: transparent; color: var(--muted);
+  font-family: 'Syne', sans-serif; font-size: .62rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+  cursor: none; transition: all .3s;
+}
+.cat-btn.active, .cat-btn:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,212,255,.06); }
+
+.sort-select {
+  background: var(--panel); border: 1px solid var(--border); color: var(--muted);
+  font-family: 'Barlow', sans-serif; font-size: .75rem; padding: .5rem 1rem; outline: none; cursor: none;
+}
+
+.listings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); }
+
+.listing-card {
+  background: var(--panel); overflow: hidden; cursor: none;
+  transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  display: flex; flex-direction: column;
+}
+.listing-card:hover { transform: translateY(-8px); z-index: 5; position: relative; box-shadow: 0 30px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(0,212,255,.2); }
+.listing-card.featured { grid-column: span 2; }
+
+/* MEDIA GALLERY inside card */
+.card-gallery { position: relative; overflow: hidden; }
+.gallery-slides { display: flex; transition: transform .4s ease; }
+.gallery-slide { min-width: 100%; position: relative; }
+.gallery-img { width: 100%; height: 260px; object-fit: cover; display: block; transition: transform .6s; }
+.listing-card.featured .gallery-img { height: 380px; }
+.listing-card:hover .gallery-img { transform: scale(1.04); }
+.gallery-video { width: 100%; height: 260px; object-fit: cover; display: block; }
+.listing-card.featured .gallery-video { height: 380px; }
+
+.gallery-nav { position: absolute; bottom: .8rem; left: 50%; transform: translateX(-50%); display: flex; gap: .4rem; z-index: 3; }
+.g-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.3); cursor: pointer; transition: background .2s, transform .2s; }
+.g-dot.active { background: var(--cyan); transform: scale(1.3); }
+.gallery-prev, .gallery-next {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; background: rgba(7,8,13,.7); backdrop-filter: blur(8px);
+  border: none; color: var(--cyan); font-size: .9rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .3s; z-index: 3;
+}
+.gallery-prev { left: .8rem; }
+.gallery-next { right: .8rem; }
+.card-gallery:hover .gallery-prev,
+.card-gallery:hover .gallery-next { opacity: 1; }
+.media-count {
+  position: absolute; top: .8rem; right: .8rem; z-index: 3;
+  background: rgba(7,8,13,.8); backdrop-filter: blur(8px);
+  font-size: .58rem; letter-spacing: .15em; color: var(--light); padding: .3rem .7rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+
+.badge {
+  position: absolute; top: .8rem; left: .8rem; z-index: 3;
+  font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; padding: .3rem .8rem;
+}
+.badge-sale { background: var(--cyan); color: var(--ink); }
+.badge-lease { background: transparent; border: 1px solid var(--amber); color: var(--amber); }
+.badge-inv { background: var(--amber); color: var(--ink); }
+
+.card-body { padding: 1.8rem; flex: 1; display: flex; flex-direction: column; }
+.card-price { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.7rem; color: var(--cyan); line-height: 1; margin-bottom: .3rem; }
+.card-price small { font-size: .65rem; color: var(--muted); font-weight: 400; }
+.card-roi { display: inline-flex; align-items: center; gap: .4rem; font-size: .65rem; color: var(--green); background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25); padding: .2rem .6rem; margin-bottom: .8rem; }
+.card-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: .95rem; color: var(--white); margin-bottom: .3rem; }
+.card-loc { font-size: .68rem; color: var(--muted); margin-bottom: 1.2rem; }
+.card-specs { display: flex; gap: 1.2rem; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 1.2rem; margin-bottom: 1.2rem; }
+.spec-item { font-size: .65rem; color: var(--muted); }
+.spec-item strong { display: block; font-size: .8rem; color: var(--light); font-weight: 400; margin-bottom: .1rem; }
+.card-actions { display: flex; gap: .8rem; margin-top: auto; }
+.card-btn-main { flex: 1; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: .7rem; font-family: 'Syne', sans-serif; font-size: .62rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; cursor: none; transition: all .3s; text-decoration: none; text-align: center; display: block; }
+.card-btn-main:hover { background: var(--cyan); color: var(--ink); }
+.card-btn-save { background: transparent; border: 1px solid var(--border); color: var(--muted); width: 40px; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: none; transition: all .3s; flex-shrink: 0; }
+.card-btn-save:hover { border-color: var(--amber); color: var(--amber); }
+
+/* INVESTMENT CALCULATOR */
+.calc-section { background: var(--panel); }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 4rem; align-items: start; }
+.calc-box { background: var(--panel2); border: 1px solid var(--border); padding: 3rem; }
+.calc-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white); margin-bottom: 2rem; display: flex; align-items: center; gap: .8rem; }
+.calc-title::before { content: ''; width: 4px; height: 1.2rem; background: var(--cyan); }
+.calc-field { margin-bottom: 1.5rem; }
+.calc-label { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: .5rem; display: block; }
+.calc-input {
+  width: 100%; background: var(--panel); border: 1px solid var(--border); color: var(--white);
+  font-family: 'Barlow', sans-serif; font-size: 1rem; padding: .8rem 1rem; outline: none; transition: border-color .3s;
+}
+.calc-input:focus { border-color: var(--cyan); }
+.calc-slider { width: 100%; appearance: none; height: 2px; background: var(--border); outline: none; cursor: pointer; }
+.calc-slider::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; background: var(--cyan); border-radius: 50%; cursor: pointer; }
+.calc-slider-val { font-size: .8rem; color: var(--cyan); margin-top: .4rem; text-align: right; }
+.calc-btn { width: 100%; background: var(--cyan); color: var(--ink); border: none; padding: 1rem; font-family: 'Syne', sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; cursor: none; transition: background .3s; margin-top: 1rem; }
+.calc-btn:hover { background: var(--cyan2); }
+
+.results-box { background: var(--panel2); border: 1px solid var(--border); padding: 3rem; }
+.results-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white); margin-bottom: 2rem; display: flex; align-items: center; gap: .8rem; }
+.results-title::before { content: ''; width: 4px; height: 1.2rem; background: var(--amber); }
+.result-row { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+.result-row:last-child { border-bottom: none; }
+.result-lbl { font-size: .72rem; color: var(--muted); letter-spacing: .05em; }
+.result-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--white); }
+.result-val.pos { color: var(--green); }
+.result-val.highlight { color: var(--cyan); font-size: 1.6rem; }
+
+/* POST LISTING MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(7,8,13,.95); backdrop-filter: blur(20px);
+  display: none; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--panel); border: 1px solid var(--border);
+  width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto;
+  position: relative;
+  animation: modalIn .4s cubic-bezier(.25,.46,.45,.94);
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(.96) translateY(20px); } to { opacity: 1; transform: none; } }
+.modal-header { padding: 2rem 2.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--panel); z-index: 2; }
+.modal-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--white); }
+.modal-close { background: none; border: 1px solid var(--border); color: var(--muted); width: 36px; height: 36px; font-size: 1.2rem; cursor: none; transition: all .3s; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+.modal-body { padding: 2.5rem; }
+.modal-steps { display: flex; gap: 0; margin-bottom: 2.5rem; }
+.modal-step {
+  flex: 1; padding: .7rem 1rem; text-align: center;
+  font-family: 'Syne', sans-serif; font-size: .62rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  border-bottom: 2px solid var(--border); color: var(--muted); transition: all .3s; cursor: pointer;
+}
+.modal-step.active { border-color: var(--cyan); color: var(--cyan); }
+.modal-step.done { border-color: var(--green); color: var(--green); }
+
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.form-group { display: flex; flex-direction: column; gap: .4rem; }
+.form-group.full { grid-column: span 2; }
+.form-label { font-size: .62rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.form-input, .form-select, .form-textarea {
+  background: var(--panel2); border: 1px solid var(--border); color: var(--white);
+  font-family: 'Barlow', sans-serif; font-size: .85rem; padding: .75rem 1rem; outline: none; transition: border-color .3s; width: 100%;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--cyan); }
+.form-select option { background: var(--panel2); }
+.form-textarea { resize: vertical; min-height: 100px; }
+
+/* UPLOAD ZONE */
+.upload-zone {
+  border: 2px dashed rgba(0,212,255,.3); padding: 3rem 2rem; text-align: center;
+  transition: all .3s; cursor: pointer; position: relative; margin-bottom: 1.5rem;
+}
+.upload-zone:hover, .upload-zone.dragover { border-color: var(--cyan); background: rgba(0,212,255,.04); }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.upload-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: .5; }
+.upload-title { font-family: 'Syne', sans-serif; font-weight: 600; color: var(--white); margin-bottom: .4rem; }
+.upload-sub { font-size: .75rem; color: var(--muted); }
+.upload-limit { font-size: .65rem; color: var(--cyan); margin-top: .6rem; }
+
+.media-preview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin-top: 1rem; }
+.media-thumb {
+  position: relative; aspect-ratio: 1; overflow: hidden;
+  background: var(--panel2); border: 1px solid var(--border);
+}
+.media-thumb img, .media-thumb video { width: 100%; height: 100%; object-fit: cover; }
+.media-thumb-remove {
+  position: absolute; top: .3rem; right: .3rem;
+  width: 22px; height: 22px; background: rgba(239,68,68,.85);
+  border: none; color: white; font-size: .7rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; border-radius: 50%;
+}
+.media-thumb-type {
+  position: absolute; bottom: .3rem; left: .3rem;
+  font-size: .55rem; background: rgba(0,0,0,.7); color: var(--cyan); padding: .15rem .4rem; letter-spacing: .1em;
+}
+
+.modal-footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.step-indicator { font-size: .7rem; color: var(--muted); }
+.modal-nav { display: flex; gap: .8rem; }
+.btn-prev { background: transparent; border: 1px solid var(--border); color: var(--muted); padding: .7rem 1.5rem; font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; cursor: none; transition: all .3s; }
+.btn-prev:hover { border-color: var(--light); color: var(--light); }
+.btn-next { background: var(--cyan); color: var(--ink); border: none; padding: .7rem 1.8rem; font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; cursor: none; transition: background .3s; }
+.btn-next:hover { background: var(--cyan2); }
+.btn-submit { background: var(--green); color: var(--ink); border: none; padding: .7rem 1.8rem; font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; cursor: none; transition: background .3s; display: none; }
+.btn-submit:hover { background: #0da371; }
+
+/* SUCCESS */
+.success-msg { text-align: center; padding: 3rem; display: none; }
+.success-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+.success-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--white); margin-bottom: .8rem; }
+.success-sub { font-size: .85rem; color: var(--muted); }
+
+/* MARKET INTEL */
+.market-section { background: var(--deep); }
+.intel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); margin-top: 4rem; }
+.intel-card { background: var(--panel); padding: 2.5rem 2rem; border-top: 3px solid transparent; transition: all .3s; }
+.intel-card:hover { border-color: var(--cyan); background: var(--panel2); }
+.intel-icon { font-size: 2rem; margin-bottom: 1rem; }
+.intel-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.5rem; color: var(--white); line-height: 1; }
+.intel-num span { font-size: 1rem; color: var(--cyan); }
+.intel-lbl { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-top: .4rem; }
+.intel-trend { font-size: .7rem; margin-top: .8rem; }
+.trend-up { color: var(--green); }
+.trend-down { color: var(--red); }
+
+/* TEAM / BROKERS */
+.team-section { background: var(--panel); }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+.broker-card { background: var(--panel2); border: 1px solid var(--border); overflow: hidden; transition: transform .3s, border-color .3s; }
+.broker-card:hover { transform: translateY(-6px); border-color: rgba(0,212,255,.25); }
+.broker-img { width: 100%; height: 220px; object-fit: cover; display: block; filter: grayscale(30%); transition: filter .4s; }
+.broker-card:hover .broker-img { filter: grayscale(0%); }
+.broker-info { padding: 1.8rem; }
+.broker-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); margin-bottom: .2rem; }
+.broker-role { font-size: .65rem; letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1rem; }
+.broker-stats { display: flex; gap: 2rem; margin-bottom: 1.2rem; }
+.b-stat-num { font-family: 'Syne', sans-serif; font-size: 1.1rem; color: var(--white); }
+.b-stat-lbl { font-size: .6rem; color: var(--muted); }
+.broker-contact { display: flex; gap: .5rem; }
+.b-btn { flex: 1; border: 1px solid var(--border); background: transparent; color: var(--muted); padding: .5rem; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; cursor: none; transition: all .3s; text-align: center; text-decoration: none; }
+.b-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+/* CONTACT CTA */
+.cta-section {
+  background: var(--ink); text-align: center; padding: 10rem 5rem;
+  position: relative; overflow: hidden;
+}
+.cta-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(0,212,255,.06) 0%, transparent 70%); }
+.cta-section .sec-title { font-size: clamp(2.5rem, 6vw, 5.5rem); margin-bottom: 1.5rem; }
+.cta-sub { font-size: .9rem; color: var(--muted); max-width: 520px; margin: 0 auto 3rem; line-height: 1.9; }
+.cta-form { display: flex; gap: 0; max-width: 480px; margin: 0 auto; }
+.cta-input { flex: 1; background: var(--panel); border: 1px solid var(--border); border-right: none; color: var(--white); font-family: 'Barlow', sans-serif; font-size: .85rem; padding: 1rem 1.5rem; outline: none; transition: border-color .3s; }
+.cta-input:focus { border-color: var(--cyan); }
+.cta-input::placeholder { color: var(--muted); }
+.cta-send { background: var(--cyan); border: none; padding: 1rem 2rem; font-family: 'Syne', sans-serif; font-size: .65rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--ink); cursor: none; transition: background .3s; white-space: nowrap; }
+.cta-send:hover { background: var(--cyan2); }
+
+/* FOOTER */
+footer { background: var(--panel); border-top: 1px solid var(--border); padding: 5rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; position: relative; z-index: 1; }
+.footer-brand .logo-name { font-size: 1.4rem; display: block; margin-bottom: 1rem; }
+.footer-desc { font-size: .75rem; color: var(--muted); line-height: 1.9; max-width: 240px; }
+.footer-col h5 { font-family: 'Syne', sans-serif; font-size: .65rem; letter-spacing: .3em; text-transform: uppercase; color: var(--cyan); margin-bottom: 1.5rem; }
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: .6rem; }
+.footer-col ul a { color: var(--muted); text-decoration: none; font-size: .75rem; transition: color .3s; }
+.footer-col ul a:hover { color: var(--cyan); }
+.footer-bottom { background: var(--ink); border-top: 1px solid var(--border); padding: 1.5rem 5rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+.footer-bottom p { font-size: .62rem; color: rgba(107,122,153,.5); letter-spacing: .1em; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+.reveal.vis { opacity: 1; transform: none; }
+.r1 { transition-delay: .1s; } .r2 { transition-delay: .2s; } .r3 { transition-delay: .3s; } .r4 { transition-delay: .4s; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-track { background: var(--ink); } ::-webkit-scrollbar-thumb { background: var(--blue); }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+  nav, nav.scrolled { padding: 1.2rem 2rem; }
+  .hero { padding: 8rem 2rem 14rem; }
+  .metrics-bar { flex-wrap: wrap; }
+  .metric { flex: 1 1 50%; }
+  section { padding: 6rem 2rem; }
+  .listings-grid { grid-template-columns: repeat(2, 1fr); }
+  .listing-card.featured { grid-column: span 1; }
+  .calc-grid { grid-template-columns: 1fr; }
+  .intel-grid { grid-template-columns: repeat(2, 1fr); }
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+  footer { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+  .footer-bottom { padding: 1.5rem 2rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full { grid-column: span 1; }
+  .media-preview-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+  .nav-menu { display: none; }
+  .listings-grid { grid-template-columns: 1fr; }
+  .intel-grid { grid-template-columns: 1fr 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  footer { grid-template-columns: 1fr; }
+  .metrics-bar { flex-direction: column; }
+  .media-preview-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <div class="logo-mark"></div>
+    <span class="logo-name">VANTAGE <span>CRE</span></span>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="#listings">Listings</a></li>
+    <li><a href="#calculator">ROI Calculator</a></li>
+    <li><a href="#market">Market Intel</a></li>
+    <li><a href="#team">Brokers</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#" class="nav-post-btn" onclick="openModal(); return false;">+ Post Listing</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag"><div class="hero-tag-line"></div>Commercial Real Estate & Investment Brokerage</div>
+    <h1 class="hero-h1">
+      INVEST IN<br><span class="cyan">COMMERCIAL</span><br>
+      <span class="italic">Real Estate That Performs</span>
+    </h1>
+    <p class="hero-p">From Class-A office towers and retail plazas to industrial warehouses and hotel assets — we connect investors and occupiers with high-yield commercial opportunities.</p>
+    <div class="hero-btns">
+      <a href="#listings" class="btn-cyan">Browse Listings</a>
+      <a href="#calculator" class="btn-border">Calculate ROI</a>
+    </div>
+  </div>
+  <div class="metrics-bar">
+    <div class="metric"><div class="metric-val" id="m1">0</div><div class="metric-lbl">Active Listings</div><div class="metric-delta">▲ Live</div></div>
+    <div class="metric"><div class="metric-val" id="m2">$0B</div><div class="metric-lbl">Total Asset Value</div><div class="metric-delta">▲ 12%</div></div>
+    <div class="metric"><div class="metric-val" id="m3">0%</div><div class="metric-lbl">Avg. Cap Rate</div><div class="metric-delta">▲ 0.4%</div></div>
+    <div class="metric"><div class="metric-val" id="m4">0</div><div class="metric-lbl">Deals Closed (YTD)</div><div class="metric-delta">▲ 18%</div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item"><span class="t-label">OFFICE</span> 432 Park Tower · $82M · 8.2% Cap <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">RETAIL</span> Westfield Plaza · $14,500/sqft · NNN Lease <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">INDUSTRIAL</span> Logistics Hub D4 · $28M · 7.9% Cap <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">HOTEL</span> Meridian Suites · 8.5% ROI · 142 Keys <span class="t-down">▼</span></span>
+    <span class="ticker-item"><span class="t-label">OFFICE</span> 432 Park Tower · $82M · 8.2% Cap <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">RETAIL</span> Westfield Plaza · $14,500/sqft · NNN Lease <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">INDUSTRIAL</span> Logistics Hub D4 · $28M · 7.9% Cap <span class="t-up">▲</span></span>
+    <span class="ticker-item"><span class="t-label">HOTEL</span> Meridian Suites · 8.5% ROI · 142 Keys <span class="t-down">▼</span></span>
+  </div>
+</div>
+
+<!-- LISTINGS -->
+<section class="listings-sec" id="listings">
+  <div class="reveal">
+    <div class="eyebrow">Featured Listings</div>
+    <h2 class="sec-title">PRIME COMMERCIAL<br>OPPORTUNITIES</h2>
+    <p class="sec-sub">Carefully vetted properties across office, retail, industrial, and hospitality sectors — all with detailed investment metrics.</p>
+  </div>
+
+  <div class="listings-controls reveal">
+    <div class="cat-filters">
+      <button class="cat-btn active" onclick="filterCat('all',this)">All</button>
+      <button class="cat-btn" onclick="filterCat('office',this)">🏢 Office</button>
+      <button class="cat-btn" onclick="filterCat('retail',this)">🏪 Retail</button>
+      <button class="cat-btn" onclick="filterCat('industrial',this)">🏭 Industrial</button>
+      <button class="cat-btn" onclick="filterCat('hotel',this)">🏨 Hotel</button>
+      <button class="cat-btn" onclick="filterCat('lease',this)">📋 For Lease</button>
+    </div>
+    <select class="sort-select"><option>Sort: Featured</option><option>Price: High → Low</option><option>Price: Low → High</option><option>Best Cap Rate</option></select>
+  </div>
+
+  <div class="listings-grid reveal" id="listingsGrid">
+
+    <!-- Card 1 - Featured Office -->
+    <div class="listing-card featured" data-cat="office sale">
+      <div class="card-gallery" data-index="0">
+        <div class="gallery-slides" id="gs0">
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80" alt="Office Tower"></div>
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=900&q=80" alt="Office Interior"></div>
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&q=80" alt="Office Lobby"></div>
+        </div>
+        <button class="gallery-prev" onclick="slide(0,-1)">‹</button>
+        <button class="gallery-next" onclick="slide(0,1)">›</button>
+        <div class="gallery-nav" id="gn0">
+          <div class="g-dot active" onclick="goSlide(0,0)"></div>
+          <div class="g-dot" onclick="goSlide(0,1)"></div>
+          <div class="g-dot" onclick="goSlide(0,2)"></div>
+        </div>
+        <div class="media-count">📷 3 Photos</div>
+        <div class="badge badge-sale">For Sale</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$82,500,000 <small>| Class A Office</small></div>
+        <div class="card-roi">📈 8.2% Cap Rate &nbsp;|&nbsp; 94% Occupied</div>
+        <div class="card-name">432 Park Commercial Tower</div>
+        <div class="card-loc">📍 Midtown Manhattan, New York</div>
+        <div class="card-specs">
+          <div class="spec-item"><strong>412,000</strong> Total sqft</div>
+          <div class="spec-item"><strong>28</strong> Floors</div>
+          <div class="spec-item"><strong>2019</strong> Built</div>
+          <div class="spec-item"><strong>LEED Gold</strong> Certified</div>
+        </div>
+        <div class="card-actions">
+          <a href="#" class="card-btn-main">View Details</a>
+          <button class="card-btn-save">♡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 - Retail -->
+    <div class="listing-card" data-cat="retail lease">
+      <div class="card-gallery" data-index="1">
+        <div class="gallery-slides" id="gs1">
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=80" alt="Retail Space"></div>
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700&q=80" alt="Retail Interior"></div>
+        </div>
+        <button class="gallery-prev" onclick="slide(1,-1)">‹</button>
+        <button class="gallery-next" onclick="slide(1,1)">›</button>
+        <div class="gallery-nav" id="gn1">
+          <div class="g-dot active" onclick="goSlide(1,0)"></div>
+          <div class="g-dot" onclick="goSlide(1,1)"></div>
+        </div>
+        <div class="media-count">📷 2 Photos</div>
+        <div class="badge badge-lease">For Lease</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$14,500<small>/sqft/yr · NNN</small></div>
+        <div class="card-roi">📍 High-Traffic Retail Corridor</div>
+        <div class="card-name">Westfield Grand Retail Plaza</div>
+        <div class="card-loc">📍 Beverly Hills, CA</div>
+        <div class="card-specs">
+          <div class="spec-item"><strong>8,400</strong> sqft</div>
+          <div class="spec-item"><strong>42,000</strong> Daily footfall</div>
+          <div class="spec-item"><strong>NNN</strong> Lease type</div>
+        </div>
+        <div class="card-actions">
+          <a href="#" class="card-btn-main">View Details</a>
+          <button class="card-btn-save">♡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 - Industrial -->
+    <div class="listing-card" data-cat="industrial sale">
+      <div class="card-gallery" data-index="2">
+        <div class="gallery-slides" id="gs2">
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1553341640-6eb5e4b28a2a?w=700&q=80" alt="Warehouse"></div>
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1615832494873-b0c52d519696?w=700&q=80" alt="Industrial Interior"></div>
+        </div>
+        <button class="gallery-prev" onclick="slide(2,-1)">‹</button>
+        <button class="gallery-next" onclick="slide(2,1)">›</button>
+        <div class="gallery-nav" id="gn2">
+          <div class="g-dot active" onclick="goSlide(2,0)"></div>
+          <div class="g-dot" onclick="goSlide(2,1)"></div>
+        </div>
+        <div class="media-count">📷 2 Photos</div>
+        <div class="badge badge-inv">Investment</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$28,000,000</div>
+        <div class="card-roi">📈 7.9% Cap Rate &nbsp;|&nbsp; Triple Net</div>
+        <div class="card-name">Logistics Hub District 4</div>
+        <div class="card-loc">📍 Dallas, TX</div>
+        <div class="card-specs">
+          <div class="spec-item"><strong>320,000</strong> sqft</div>
+          <div class="spec-item"><strong>36ft</strong> Clear height</div>
+          <div class="spec-item"><strong>48</strong> Dock doors</div>
+        </div>
+        <div class="card-actions">
+          <a href="#" class="card-btn-main">View Details</a>
+          <button class="card-btn-save">♡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 - Hotel -->
+    <div class="listing-card" data-cat="hotel sale">
+      <div class="card-gallery" data-index="3">
+        <div class="gallery-slides" id="gs3">
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=80" alt="Hotel"></div>
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=80" alt="Hotel Room"></div>
+        </div>
+        <button class="gallery-prev" onclick="slide(3,-1)">‹</button>
+        <button class="gallery-next" onclick="slide(3,1)">›</button>
+        <div class="gallery-nav" id="gn3">
+          <div class="g-dot active" onclick="goSlide(3,0)"></div>
+          <div class="g-dot" onclick="goSlide(3,1)"></div>
+        </div>
+        <div class="media-count">📷 2 Photos</div>
+        <div class="badge badge-sale">For Sale</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$38,000,000</div>
+        <div class="card-roi">📈 8.5% ROI &nbsp;|&nbsp; 82% Occupancy</div>
+        <div class="card-name">Meridian Boutique Hotel</div>
+        <div class="card-loc">📍 Miami Beach, FL</div>
+        <div class="card-specs">
+          <div class="spec-item"><strong>142</strong> Keys</div>
+          <div class="spec-item"><strong>4-Star</strong> Rating</div>
+          <div class="spec-item"><strong>$320</strong> RevPAR</div>
+        </div>
+        <div class="card-actions">
+          <a href="#" class="card-btn-main">View Details</a>
+          <button class="card-btn-save">♡</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 - Office Lease -->
+    <div class="listing-card" data-cat="office lease">
+      <div class="card-gallery" data-index="4">
+        <div class="gallery-slides" id="gs4">
+          <div class="gallery-slide"><img class="gallery-img" src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=700&q=80" alt="Office Space"></div>
+        </div>
+        <div class="media-count">📷 1 Photo</div>
+        <div class="badge badge-lease">For Lease</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">$68<small>/sqft/yr</small></div>
+        <div class="card-roi">🏢 Full Floor Available</div>
+        <div class="card-name">One Brickell City Office</div>
+        <div class="card-loc">📍 Brickell, Miami, FL</div>
+        <div class="card-specs">
+          <div class="spec-item"><strong>22,000</strong> sqft</div>
+          <div class="spec-item"><strong>Floor 31</strong> Views</div>
+          <div class="spec-item"><strong>2025</strong> Delivery</div>
+        </div>
+        <div class="card-actions">
+          <a href="#" class="card-btn-main">View Details</a>
+          <button class="card-btn-save">♡</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="reveal" style="text-align:center; margin-top:3rem;">
+    <a href="#" class="btn-border">Load More Listings →</a>
+  </div>
+</section>
+
+<!-- ROI CALCULATOR -->
+<section class="calc-section" id="calculator">
+  <div class="reveal">
+    <div class="eyebrow">Investment Tools</div>
+    <h2 class="sec-title">ROI & CAP RATE<br>CALCULATOR</h2>
+    <p class="sec-sub">Instantly analyze the return on any commercial property with our investment calculator.</p>
+  </div>
+  <div class="calc-grid">
+    <div class="calc-box reveal">
+      <div class="calc-title">Property Inputs</div>
+      <div class="calc-field">
+        <label class="calc-label">Purchase Price ($)</label>
+        <input class="calc-input" type="number" id="c-price" value="5000000" oninput="calcROI()">
+      </div>
+      <div class="calc-field">
+        <label class="calc-label">Annual Gross Income ($)</label>
+        <input class="calc-input" type="number" id="c-income" value="600000" oninput="calcROI()">
+      </div>
+      <div class="calc-field">
+        <label class="calc-label">Annual Operating Expenses ($)</label>
+        <input class="calc-input" type="number" id="c-expenses" value="150000" oninput="calcROI()">
+      </div>
+      <div class="calc-field">
+        <label class="calc-label">Down Payment — <span class="calc-slider-val" id="dp-val">30%</span></label>
+        <input class="calc-slider" type="range" min="10" max="100" value="30" id="c-down" oninput="document.getElementById('dp-val').textContent=this.value+'%'; calcROI()">
+      </div>
+      <div class="calc-field">
+        <label class="calc-label">Interest Rate — <span class="calc-slider-val" id="ir-val">6.5%</span></label>
+        <input class="calc-slider" type="range" min="1" max="15" step="0.1" value="6.5" id="c-rate" oninput="document.getElementById('ir-val').textContent=parseFloat(this.value).toFixed(1)+'%'; calcROI()">
+      </div>
+      <button class="calc-btn" onclick="calcROI()">Calculate Returns</button>
+    </div>
+    <div class="results-box reveal r1">
+      <div class="results-title">Investment Analysis</div>
+      <div class="result-row"><span class="result-lbl">Net Operating Income (NOI)</span><span class="result-val pos" id="r-noi">$450,000</span></div>
+      <div class="result-row"><span class="result-lbl">Cap Rate</span><span class="result-val highlight" id="r-cap">9.0%</span></div>
+      <div class="result-row"><span class="result-lbl">Annual Debt Service</span><span class="result-val" id="r-debt">$—</span></div>
+      <div class="result-row"><span class="result-lbl">Cash-on-Cash Return</span><span class="result-val pos" id="r-coc">—</span></div>
+      <div class="result-row"><span class="result-lbl">Down Payment Required</span><span class="result-val" id="r-dp">$1,500,000</span></div>
+      <div class="result-row"><span class="result-lbl">Loan Amount</span><span class="result-val" id="r-loan">$3,500,000</span></div>
+      <div class="result-row"><span class="result-lbl">Estimated Annual Cash Flow</span><span class="result-val pos" id="r-cf">—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET INTEL -->
+<section class="market-section" id="market">
+  <div class="reveal">
+    <div class="eyebrow">Market Intelligence</div>
+    <h2 class="sec-title">COMMERCIAL REAL<br>ESTATE MARKET DATA</h2>
+  </div>
+  <div class="intel-grid">
+    <div class="intel-card reveal r1">
+      <div class="intel-icon">🏢</div>
+      <div class="intel-num">14.2<span>%</span></div>
+      <div class="intel-lbl">Office Vacancy Rate</div>
+      <div class="intel-trend trend-down">▼ Down 1.2% QoQ — Market tightening</div>
+    </div>
+    <div class="intel-card reveal r2">
+      <div class="intel-icon">🏪</div>
+      <div class="intel-num">$42<span>/sqft</span></div>
+      <div class="intel-lbl">Avg Retail Asking Rent</div>
+      <div class="intel-trend trend-up">▲ Up 3.8% YoY — Strong demand</div>
+    </div>
+    <div class="intel-card reveal r3">
+      <div class="intel-icon">🏭</div>
+      <div class="intel-num">4.1<span>%</span></div>
+      <div class="intel-lbl">Industrial Vacancy</div>
+      <div class="intel-trend trend-up">▲ Near all-time low — High demand</div>
+    </div>
+    <div class="intel-card reveal r4">
+      <div class="intel-icon">📊</div>
+      <div class="intel-num">7.8<span>%</span></div>
+      <div class="intel-lbl">Avg Market Cap Rate</div>
+      <div class="intel-trend trend-up">▲ Up from 7.2% — Better value</div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section" id="team">
+  <div class="reveal">
+    <div class="eyebrow">Our Brokers</div>
+    <h2 class="sec-title">EXPERT COMMERCIAL<br>BROKERS</h2>
+    <p class="sec-sub">Seasoned professionals with deep market knowledge across all commercial asset classes and geographies.</p>
+  </div>
+  <div class="team-grid">
+    <div class="broker-card reveal r1">
+      <img class="broker-img" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&q=80" alt="Broker">
+      <div class="broker-info">
+        <div class="broker-name">Marcus J. Aldridge</div>
+        <div class="broker-role">Senior Investment Broker · Office & Industrial</div>
+        <div class="broker-stats">
+          <div><div class="b-stat-num">$1.2B</div><div class="b-stat-lbl">Volume Closed</div></div>
+          <div><div class="b-stat-num">22yr</div><div class="b-stat-lbl">Experience</div></div>
+        </div>
+        <div class="broker-contact">
+          <a href="#" class="b-btn">📧 Email</a>
+          <a href="#" class="b-btn">📞 Call</a>
+          <a href="#" class="b-btn">View Profile</a>
+        </div>
+      </div>
+    </div>
+    <div class="broker-card reveal r2">
+      <img class="broker-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&q=80" alt="Broker">
+      <div class="broker-info">
+        <div class="broker-name">Sophia Reyes-Canton</div>
+        <div class="broker-role">Director · Retail & Hospitality</div>
+        <div class="broker-stats">
+          <div><div class="b-stat-num">$680M</div><div class="b-stat-lbl">Volume Closed</div></div>
+          <div><div class="b-stat-num">15yr</div><div class="b-stat-lbl">Experience</div></div>
+        </div>
+        <div class="broker-contact">
+          <a href="#" class="b-btn">📧 Email</a>
+          <a href="#" class="b-btn">📞 Call</a>
+          <a href="#" class="b-btn">View Profile</a>
+        </div>
+      </div>
+    </div>
+    <div class="broker-card reveal r3">
+      <img class="broker-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80" alt="Broker">
+      <div class="broker-info">
+        <div class="broker-name">David Chen-Park</div>
+        <div class="broker-role">VP · Industrial & Logistics</div>
+        <div class="broker-stats">
+          <div><div class="b-stat-num">$490M</div><div class="b-stat-lbl">Volume Closed</div></div>
+          <div><div class="b-stat-num">12yr</div><div class="b-stat-lbl">Experience</div></div>
+        </div>
+        <div class="broker-contact">
+          <a href="#" class="b-btn">📧 Email</a>
+          <a href="#" class="b-btn">📞 Call</a>
+          <a href="#" class="b-btn">View Profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="reveal" style="position:relative;z-index:1">
+    <div class="eyebrow" style="justify-content:center">Get In Touch</div>
+    <h2 class="sec-title">READY TO INVEST<br>OR <span style="color:var(--cyan)">LIST A PROPERTY?</span></h2>
+    <p class="cta-sub">Our team of commercial specialists is ready to guide you through acquisitions, dispositions, and leasing strategies tailored to your goals.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-input" placeholder="Your email address">
+      <button class="cta-send">Get In Touch</button>
+    </div>
+    <p style="font-size:.7rem;color:var(--muted);margin-top:1rem;">Or call us: <a href="#" style="color:var(--cyan);">+1 (212) 555-0198</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <span class="logo-name">VANTAGE <span style="color:var(--cyan)">CRE</span></span>
+    <p class="footer-desc">Full-service commercial real estate brokerage specializing in investment-grade office, retail, industrial, and hospitality assets across North America.</p>
+  </div>
+  <div class="footer-col">
+    <h5>Property Types</h5>
+    <ul>
+      <li><a href="#">Office Spaces</a></li>
+      <li><a href="#">Retail & Shops</a></li>
+      <li><a href="#">Industrial & Warehouses</a></li>
+      <li><a href="#">Hotels & Hospitality</a></li>
+      <li><a href="#">Mixed-Use Developments</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h5>Services</h5>
+    <ul>
+      <li><a href="#">Acquisition Advisory</a></li>
+      <li><a href="#">Disposition Services</a></li>
+      <li><a href="#">Tenant Representation</a></li>
+      <li><a href="#">Investment Analysis</a></li>
+      <li><a href="#">1031 Exchanges</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h5>Company</h5>
+    <ul>
+      <li><a href="#">About Vantage CRE</a></li>
+      <li><a href="#">Our Brokers</a></li>
+      <li><a href="#">Market Reports</a></li>
+      <li><a href="#">Careers</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>© 2026 VANTAGE CRE. ALL RIGHTS RESERVED.</p>
+  <p>PRIVACY POLICY · TERMS OF USE · LICENSES</p>
+</div>
+
+<!-- POST LISTING MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="checkClose(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div class="modal-title">Post a Commercial Listing</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- Steps -->
+      <div class="modal-steps">
+        <div class="modal-step active" id="step-tab-1">1. Property Info</div>
+        <div class="modal-step" id="step-tab-2">2. Details & Specs</div>
+        <div class="modal-step" id="step-tab-3">3. Photos & Videos</div>
+        <div class="modal-step" id="step-tab-4">4. Investment Data</div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="step-panel active" id="sp1">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label class="form-label">Property Name / Title *</label>
+            <input class="form-input" type="text" placeholder="e.g. One Financial Plaza Office Tower">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Property Type *</label>
+            <select class="form-select">
+              <option value="">Select type...</option>
+              <option>Office — Class A</option>
+              <option>Office — Class B</option>
+              <option>Retail — High Street</option>
+              <option>Retail — Shopping Center</option>
+              <option>Industrial — Warehouse</option>
+              <option>Industrial — Logistics</option>
+              <option>Hotel & Hospitality</option>
+              <option>Mixed-Use</option>
+              <option>Land / Development Site</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Listing Type *</label>
+            <select class="form-select">
+              <option>For Sale</option>
+              <option>For Lease</option>
+              <option>Investment / Joint Venture</option>
+              <option>Sale-Leaseback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Asking Price / Rent *</label>
+            <input class="form-input" type="text" placeholder="e.g. $12,500,000 or $45/sqft/yr">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Address *</label>
+            <input class="form-input" type="text" placeholder="Street address">
+          </div>
+          <div class="form-group">
+            <label class="form-label">City, State *</label>
+            <input class="form-input" type="text" placeholder="e.g. Chicago, IL">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Property Description</label>
+            <textarea class="form-textarea" placeholder="Describe the property — location highlights, tenant mix, notable features, investment thesis..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-panel" id="sp2">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Total Size (sqft) *</label>
+            <input class="form-input" type="number" placeholder="e.g. 45000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Available Size (sqft)</label>
+            <input class="form-input" type="number" placeholder="e.g. 22000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year Built</label>
+            <input class="form-input" type="number" placeholder="e.g. 2018">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Floors</label>
+            <input class="form-input" type="number" placeholder="e.g. 24">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Parking Spaces</label>
+            <input class="form-input" type="number" placeholder="e.g. 200">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Zoning Class</label>
+            <input class="form-input" type="text" placeholder="e.g. C-2 Commercial">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Occupancy Rate (%)</label>
+            <input class="form-input" type="number" min="0" max="100" placeholder="e.g. 92">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lease Expiry / Availability</label>
+            <input class="form-input" type="text" placeholder="e.g. Q3 2026 or Immediate">
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Key Amenities / Features</label>
+            <textarea class="form-textarea" placeholder="e.g. LEED Gold certified, fiber connectivity, rooftop terrace, 24/7 security, loading docks..." style="min-height:80px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 - MEDIA UPLOAD -->
+      <div class="step-panel" id="sp3">
+        <div class="upload-zone" id="photoZone">
+          <input type="file" accept="image/*" multiple onchange="handleFiles(event,'photos')" id="photoInput">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-title">Drag & Drop Photos Here</div>
+          <div class="upload-sub">or click to browse from your device</div>
+          <div class="upload-limit">JPG, PNG, WEBP · Up to 20 photos · Max 10MB each</div>
+        </div>
+        <div class="media-preview-grid" id="photoPreview"></div>
+
+        <div class="upload-zone" id="videoZone" style="margin-top:1.5rem">
+          <input type="file" accept="video/*" multiple onchange="handleFiles(event,'videos')" id="videoInput">
+          <div class="upload-icon">🎬</div>
+          <div class="upload-title">Drag & Drop Videos Here</div>
+          <div class="upload-sub">Property walkthroughs, drone footage, virtual tours</div>
+          <div class="upload-limit">MP4, MOV, AVI · Up to 5 videos · Max 500MB each</div>
+        </div>
+        <div class="media-preview-grid" id="videoPreview"></div>
+
+        <p id="mediaCount" style="font-size:.72rem;color:var(--muted);margin-top:1rem;">No media uploaded yet</p>
+      </div>
+
+      <!-- STEP 4 - INVESTMENT -->
+      <div class="step-panel" id="sp4">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Annual Gross Income ($)</label>
+            <input class="form-input" type="number" placeholder="e.g. 1200000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Annual Operating Expenses ($)</label>
+            <input class="form-input" type="number" placeholder="e.g. 280000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cap Rate (%)</label>
+            <input class="form-input" type="number" step="0.1" placeholder="e.g. 7.8">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cash-on-Cash Return (%)</label>
+            <input class="form-input" type="number" step="0.1" placeholder="e.g. 9.2">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Number of Tenants</label>
+            <input class="form-input" type="number" placeholder="e.g. 3">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lease Type</label>
+            <select class="form-select">
+              <option>Triple Net (NNN)</option>
+              <option>Double Net (NN)</option>
+              <option>Gross Lease</option>
+              <option>Modified Gross</option>
+              <option>Full Service</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Investment Highlights</label>
+            <textarea class="form-textarea" placeholder="e.g. Long-term anchor tenant, below-market rents with upside, located in opportunity zone..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Name *</label>
+            <input class="form-input" type="text" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Email *</label>
+            <input class="form-input" type="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact Phone</label>
+            <input class="form-input" type="tel" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Broker License #</label>
+            <input class="form-input" type="text" placeholder="e.g. DRE 01234567">
+          </div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-msg" id="successMsg">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Listing Submitted Successfully!</div>
+        <div class="success-sub">Your commercial listing is under review. Our team will verify the details and publish it within 24 hours. You'll receive a confirmation email shortly.</div>
+      </div>
+    </div>
+    <div class="modal-footer" id="modalFooter">
+      <div class="step-indicator" id="stepIndicator">Step 1 of 4</div>
+      <div class="modal-nav">
+        <button class="btn-prev" id="btnPrev" onclick="modalNav(-1)" style="display:none">← Back</button>
+        <button class="btn-next" id="btnNext" onclick="modalNav(1)">Next Step →</button>
+        <button class="btn-submit" id="btnSubmit" onclick="submitListing()">Submit Listing ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cur.style.left=mx+'px'; cur.style.top=my+'px';
+});
+(function animRing() {
+  rx += (mx-rx)*0.1; ry += (my-ry)*0.1;
+  curRing.style.left=rx+'px'; curRing.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.cat-btn,.listing-card,.broker-card,.intel-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.width='18px'; cur.style.height='18px'; curRing.style.width='52px'; curRing.style.height='52px'; });
+  el.addEventListener('mouseleave', () => { cur.style.width='8px'; cur.style.height='8px'; curRing.style.width='32px'; curRing.style.height='32px'; });
+});
+
+// NAV SCROLL
+window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', scrollY > 60));
+
+// REVEAL
+const revEls = document.querySelectorAll('.reveal');
+new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }), {threshold:0.08}).observe || null;
+const ro = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); }), {threshold:0.08});
+revEls.forEach(el => ro.observe(el));
+
+// COUNTER ANIMATION
+function animCount(el, end, prefix='', suffix='', decimals=0) {
+  let s=0, dur=2000, start=null;
+  function step(t) {
+    if(!start) start=t;
+    const p = Math.min((t-start)/dur, 1);
+    const ease = 1-Math.pow(1-p,3);
+    const val = ease*end;
+    el.textContent = prefix + (decimals ? val.toFixed(decimals) : Math.floor(val)) + suffix;
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const mObs = new IntersectionObserver(es => {
+  if(es[0].isIntersecting) {
+    animCount(document.getElementById('m1'), 247, '', '');
+    animCount(document.getElementById('m2'), 3.8, '$', 'B', 1);
+    animCount(document.getElementById('m3'), 7.8, '', '%', 1);
+    animCount(document.getElementById('m4'), 89, '', '');
+    mObs.disconnect();
+  }
+});
+mObs.observe(document.querySelector('.metrics-bar'));
+
+// PARALLAX
+window.addEventListener('scroll', () => {
+  const el = document.querySelector('.hero-glow1');
+  if(el) el.style.transform = `scale(${1 + scrollY*0.0003}) translateY(${scrollY*0.2}px)`;
+});
+
+// FILTER LISTINGS
+function filterCat(cat, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.listing-card').forEach(c => {
+    const cats = c.dataset.cat || '';
+    c.style.display = (cat === 'all' || cats.includes(cat)) ? 'flex' : 'none';
+  });
+}
+
+// GALLERY SLIDER
+const slideIndexes = {};
+function slide(id, dir) {
+  const slides = document.getElementById('gs'+id);
+  const dots = document.getElementById('gn'+id);
+  if(!slides) return;
+  const count = slides.children.length;
+  slideIndexes[id] = ((slideIndexes[id]||0) + dir + count) % count;
+  slides.style.transform = `translateX(-${slideIndexes[id]*100}%)`;
+  if(dots) Array.from(dots.children).forEach((d,i) => d.classList.toggle('active', i===slideIndexes[id]));
+}
+function goSlide(id, idx) {
+  slideIndexes[id] = idx;
+  const slides = document.getElementById('gs'+id);
+  const dots = document.getElementById('gn'+id);
+  slides.style.transform = `translateX(-${idx*100}%)`;
+  if(dots) Array.from(dots.children).forEach((d,i) => d.classList.toggle('active', i===idx));
+}
+
+// ROI CALCULATOR
+function calcROI() {
+  const price = parseFloat(document.getElementById('c-price').value)||0;
+  const income = parseFloat(document.getElementById('c-income').value)||0;
+  const expenses = parseFloat(document.getElementById('c-expenses').value)||0;
+  const downPct = parseFloat(document.getElementById('c-down').value)/100;
+  const rate = parseFloat(document.getElementById('c-rate').value)/100;
+  const noi = income - expenses;
+  const capRate = price>0 ? (noi/price*100).toFixed(2) : 0;
+  const down = price * downPct;
+  const loan = price - down;
+  const monthlyRate = rate/12;
+  const n = 25*12;
+  const monthlyDebt = loan>0 ? loan * monthlyRate * Math.pow(1+monthlyRate,n) / (Math.pow(1+monthlyRate,n)-1) : 0;
+  const annualDebt = monthlyDebt * 12;
+  const cashFlow = noi - annualDebt;
+  const coc = down>0 ? (cashFlow/down*100).toFixed(2) : 0;
+  const fmt = v => '$' + Math.round(v).toLocaleString();
+  document.getElementById('r-noi').textContent = fmt(noi);
+  document.getElementById('r-cap').textContent = capRate + '%';
+  document.getElementById('r-debt').textContent = fmt(annualDebt);
+  document.getElementById('r-coc').textContent = coc + '%';
+  document.getElementById('r-dp').textContent = fmt(down);
+  document.getElementById('r-loan').textContent = fmt(loan);
+  document.getElementById('r-cf').textContent = fmt(cashFlow);
+}
+calcROI();
+
+// MODAL
+let currentStep = 1;
+function openModal() { document.getElementById('modalOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow=''; }
+function checkClose(e) { if(e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+function setStep(n) {
+  currentStep = n;
+  for(let i=1;i<=4;i++) {
+    document.getElementById('sp'+i).classList.toggle('active', i===n);
+    const tab = document.getElementById('step-tab-'+i);
+    tab.classList.toggle('active', i===n);
+    if(i < n) tab.classList.add('done'); else tab.classList.remove('done');
+  }
+  document.getElementById('stepIndicator').textContent = `Step ${n} of 4`;
+  document.getElementById('btnPrev').style.display = n>1 ? 'block' : 'none';
+  document.getElementById('btnNext').style.display = n<4 ? 'block' : 'none';
+  document.getElementById('btnSubmit').style.display = n===4 ? 'block' : 'none';
+}
+function modalNav(dir) { if(currentStep+dir>=1 && currentStep+dir<=4) setStep(currentStep+dir); }
+
+function submitListing() {
+  document.getElementById('sp4').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+  document.getElementById('modalFooter').style.display='none';
+  document.querySelectorAll('.modal-step').forEach(s => { s.classList.remove('active'); s.classList.add('done'); });
+}
+
+// MEDIA UPLOAD
+const photos = [], videos = [];
+function handleFiles(e, type) {
+  const files = Array.from(e.target.files);
+  files.forEach(file => {
+    if(type==='photos' && photos.length >= 20) return;
+    if(type==='videos' && videos.length >= 5) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const data = { url: ev.target.result, name: file.name, type: file.type };
+      if(type==='photos') { photos.push(data); renderMedia('photos'); }
+      else { videos.push(data); renderMedia('videos'); }
+      updateMediaCount();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderMedia(type) {
+  const grid = document.getElementById(type==='photos' ? 'photoPreview' : 'videoPreview');
+  const arr = type==='photos' ? photos : videos;
+  grid.innerHTML = arr.map((m,i) => `
+    <div class="media-thumb">
+      ${m.type.startsWith('video') 
+        ? `<video src="${m.url}" muted></video><div class="media-thumb-type">VIDEO</div>`
+        : `<img src="${m.url}" alt="${m.name}"><div class="media-thumb-type">PHOTO</div>`}
+      <button class="media-thumb-remove" onclick="removeMedia('${type}',${i})">✕</button>
+    </div>`).join('');
+}
+function removeMedia(type, idx) {
+  if(type==='photos') photos.splice(idx,1);
+  else videos.splice(idx,1);
+  renderMedia(type); updateMediaCount();
+}
+function updateMediaCount() {
+  document.getElementById('mediaCount').textContent = `${photos.length} photo${photos.length!==1?'s':''}, ${videos.length} video${videos.length!==1?'s':''} uploaded`;
+}
+
+// DRAG & DROP
+['photoZone','videoZone'].forEach(id => {
+  const zone = document.getElementById(id);
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    const type = id==='photoZone' ? 'photos' : 'videos';
+    const fakeEvent = { target: { files: e.dataTransfer.files } };
+    handleFiles(fakeEvent, type);
+  });
+});
+</script>
+</body>
+</html>
